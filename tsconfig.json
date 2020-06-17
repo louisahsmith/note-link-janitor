@@ -5,6 +5,6 @@
     "target": "es2020",
     "outDir": "out",
     "sourceMap": true,
-    "strictNullChecks": true
+    "strictNullChecks": false
   }
 }

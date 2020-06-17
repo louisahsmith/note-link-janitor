@@ -11,11 +11,12 @@ import updateBacklinks from "./lib/updateBacklinks";
 (async () => {
   const baseNotePath = process.argv[2];
   if (!baseNotePath || baseNotePath === "--help") {
-    console.log("Usage: note-link-janitor [NOTE_DIRECTORY]");
+    console.log("Usage: note-link-janitor-rev [NOTE_DIRECTORY]");
     return;
   }
 
   const notes = await readAllNotes(baseNotePath);
+  Object.keys(notes).forEach((key) => (notes[key] == null) && delete notes[key]);
   const linkMap = createLinkMap(Object.values(notes));
 
   // Sort by PageRank

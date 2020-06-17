@@ -25,9 +25,13 @@ export default function updateBacklinks(
       ? backlinksInfo.until.position!.start.offset!
       : noteContents.length;
   } else {
-    insertionOffset = backlinksInfo.insertionPoint
-      ? backlinksInfo.insertionPoint.position!.start.offset!
-      : noteContents.length;
+    if (backlinksInfo.insertionPoint === null) {
+      insertionOffset = 0
+    } else {
+      insertionOffset = backlinksInfo.insertionPoint
+        ? backlinksInfo.insertionPoint.position!.start.offset!
+        : noteContents.length;
+    }
   }
 
   if (oldEndOffset === -1) {

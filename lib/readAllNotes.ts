@@ -27,7 +27,8 @@ async function readNote(notePath: string): Promise<Note> {
   const parseTree = processor.parse(noteContents) as MDAST.Root;
   const headingNode = await headingFinder.run(parseTree);
   if (headingNode.type === "missingTitle") {
-    throw new Error(`${notePath} has no title`);
+    return null;
+    // throw new Error(`${notePath} has no title`);
   }
   const title = remark()
     .stringify({
