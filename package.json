@@ -38,6 +38,6 @@
   },
   "files": [
     "Readme.md",
-    "dist/**/*"
+    "out/**/*"
   ]
 }

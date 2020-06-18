@@ -92,12 +92,14 @@ export default function updateBacklinks(
             .join("")}`
       )
       .join("")}\n`;
+
+    backlinksString = backlinksString.replace(/^\t\*\s$/gm, "").replace(/\n\s*\n/g, "\n") + "\n"
+
   }
 
   const newNoteContents =
     noteContents.slice(0, insertionOffset) +
-    backlinksString.replace(/^\t\*\s$/gm, "").replace(/\n\s*\n/g, "\n") +
-    "\n" +
+    backlinksString +
     noteContents.slice(oldEndOffset);
 
   return newNoteContents;
