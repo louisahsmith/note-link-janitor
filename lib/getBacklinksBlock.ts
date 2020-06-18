@@ -26,8 +26,8 @@ export default function getBacklinksBlock(
     (node: UNIST.Node): node is MDAST.Heading =>
       is(node, {
         type: "heading",
-        depth: 2
-      }) && is((node as MDAST.Heading).children[0], { value: "Backlinks" })
+        depth: 3
+      }) && is((node as MDAST.Heading).children[0], { value: "Links" })
   );
   if (existingBacklinksNodeIndex === -1) {
     const insertionPoint =

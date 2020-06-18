@@ -82,12 +82,12 @@ export default function updateBacklinks(
     let newTitle = noteContents.substr(1, newTree).replace(/\[/, "").trim();
     var regex = new RegExp("^" + newTitle + "$", "m");
 
-    backlinksString = `## Backlinks\n${backlinks
+    backlinksString = `### Links\n${backlinks
       .map(
         entry =>
           `* [[${entry.sourceTitle}]]\n${entry.context
             .map(
-              block => `\t* ${processor.stringify(block).replace(/\n.+/, "").replace(/\[+(.*?)\]+/g,"$1").replace(regex, "")}\n`
+              block => `\t* ${processor.stringify(block).replace(/\n.+/, "").replace(/\[{2}(.*?)\]{2}/g,"$1").replace(regex, "").replace(/\#+/g, "")}\n`
             )
             .join("")}`
       )
@@ -96,7 +96,8 @@ export default function updateBacklinks(
 
   const newNoteContents =
     noteContents.slice(0, insertionOffset) +
-    backlinksString.replace(/^\t\*\s$/gm, "") +
+    backlinksString.replace(/^\t\*\s$/gm, "").replace(/\n\s*\n/g, "\n") +
+    "\n" +
     noteContents.slice(oldEndOffset);
 
   return newNoteContents;
