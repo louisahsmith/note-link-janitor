@@ -7,7 +7,7 @@ import processor from "./processor";
 
 export interface BacklinkEntry {
   sourceTitle: string;
-  context: MDAST.BlockContent[];
+  context: MDAST.BlockContent[]
 }
 
 export default function updateBacklinks(
@@ -40,49 +40,54 @@ export default function updateBacklinks(
 
   let backlinksString = "";
   if (backlinks.length > 0) {
-    const backlinkNodes: MDAST.ListItem[] = backlinks.map(entry => ({
-      type: "listItem",
-      spread: false,
-      children: [
-        {
-          type: "paragraph",
-          children: [
-            ({
-              type: "wikiLink",
-              value: entry.sourceTitle,
-              data: { alias: entry.sourceTitle }
-            } as unknown) as MDAST.PhrasingContent
-          ]
-        },
-        {
-          type: "list",
-          ordered: false,
-          spread: false,
-          children: entry.context.map(block => ({
-            type: "listItem",
-            spread: false,
-            children: [block]
-          }))
-        }
-      ]
-    }));
-    const backlinkContainer = {
-      type: "root",
-      children: [
-        {
-          type: "list",
-          ordered: false,
-          spread: false,
-          children: backlinkNodes
-        }
-      ]
-    };
+    // this whole part is unnecessary?
+    // const backlinkNodes: MDAST.ListItem[] = backlinks.map(entry => ({
+    //   type: "listItem",
+    //   spread: false,
+    //   children: [
+    //     {
+    //       type: "paragraph",
+    //       children: [
+    //         ({
+    //           type: "wikiLink",
+    //           value: entry.sourceTitle,
+    //           data: { alias: entry.sourceTitle }
+    //         } as unknown) as MDAST.PhrasingContent
+    //       ]
+    //     },
+    //     {
+    //       type: "list",
+    //       ordered: false,
+    //       spread: false,
+    //       children: entry.context.map(block => ({
+    //         type: "listItem",
+    //         spread: false,
+    //         children: [block]
+    //       }))
+    //     }
+    //   ]
+    // }));
+    // const backlinkContainer = {
+    //   type: "root",
+    //   children: [
+    //     {
+    //       type: "list",
+    //       ordered: false,
+    //       spread: false,
+    //       children: backlinkNodes
+    //     }
+    //   ]
+    // };
+    let newTree = noteContents.search(/\n/);
+    let newTitle = noteContents.substr(1, newTree).replace(/\[/, "").trim();
+    var regex = new RegExp("^" + newTitle + "$", "m");
+
     backlinksString = `## Backlinks\n${backlinks
       .map(
         entry =>
           `* [[${entry.sourceTitle}]]\n${entry.context
             .map(
-              block => `\t* ${processor.stringify(block).replace(/\n.+/, "")}\n`
+              block => `\t* ${processor.stringify(block).replace(/\n.+/, "").replace(/\[+(.*?)\]+/g,"$1").replace(regex, "")}\n`
             )
             .join("")}`
       )
@@ -91,7 +96,7 @@ export default function updateBacklinks(
 
   const newNoteContents =
     noteContents.slice(0, insertionOffset) +
-    backlinksString +
+    backlinksString.replace(/^\t\*\s$/gm, "") +
     noteContents.slice(oldEndOffset);
 
   return newNoteContents;
